@@ -4,6 +4,7 @@ extends CharacterBody2D
 @export var projectile: PackedScene
 @export var spawn_location: Node
 var last_direction = Direction.SOUTH
+var can_shoot = true
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -30,11 +31,13 @@ func _process(delta):
 	if Input.is_action_pressed("ui_down"):
 		velocity.y += 0.5
 
-	var is_shooting = Input.is_action_just_pressed("shoot")
-	if is_shooting:
+	var is_shooting = Input.is_action_pressed("shoot")
+	if is_shooting and can_shoot:
 		rpc_id(1, "_shoot_rpc", looking_angle_rad)
+		can_shoot = false
 		$IsShootingTimer.stop()
 		$IsShootingTimer.start()
+		$FireRateTimer.start()
 
 	last_direction = looking_direction if is_shooting or !$IsShootingTimer.is_stopped() else get_moving_direction(velocity)
 	velocity = velocity.normalized() * speed * delta
@@ -108,3 +111,7 @@ enum Direction {
 	SOUTH_WEST,
 	SOUTH_EAST
 }
+
+
+func _on_fire_rate_timer_timeout():
+	can_shoot = true

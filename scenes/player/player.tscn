@@ -414,8 +414,8 @@ wait_time = 0.5
 one_shot = true
 
 [node name="DamageZone" type="Area2D" parent="."]
-collision_layer = 2
-collision_mask = 2
+collision_layer = 4
+collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DamageZone"]
 position = Vector2(0.5, -8)
@@ -423,3 +423,8 @@ shape = SubResource("RectangleShape2D_tp35m")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_oj2j1")
+
+[node name="FireRateTimer" type="Timer" parent="."]
+wait_time = 0.15
+
+[connection signal="timeout" from="FireRateTimer" to="." method="_on_fire_rate_timer_timeout"]

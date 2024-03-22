@@ -149,7 +149,7 @@ properties/3/path = NodePath("AnimatedSprite2D:frame")
 properties/3/spawn = true
 properties/3/replication_mode = 1
 
-[node name="Bullet" type="Area2D"]
+[node name="Bullet" type="Area2D" groups=["projectiles"]]
 texture_filter = 1
 collision_layer = 2
 collision_mask = 2
@@ -173,6 +173,7 @@ autostart = true
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_vrwb4")
 
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
 [connection signal="timeout" from="BurnoutTimer" to="." method="_on_burnout_timer_timeout"]
