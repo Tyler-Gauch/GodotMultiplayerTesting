@@ -668,7 +668,7 @@ properties/4/path = NodePath("AnimatedSprite2D:frame")
 properties/4/spawn = true
 properties/4/replication_mode = 1
 
-[node name="Knight" type="Node2D" groups=["enemies"]]
+[node name="Knight" type="CharacterBody2D" groups=["enemies"]]
 y_sort_enabled = true
 scale = Vector2(3, 3)
 script = ExtResource("1_uwr52")
@@ -681,9 +681,7 @@ animation = &"idle_south"
 frame_progress = 0.50257
 offset = Vector2(0, -8.42)
 
-[node name="MovementArea" type="Area2D" parent="."]
-
-[node name="MovementCollision" type="CollisionShape2D" parent="MovementArea"]
+[node name="MovementCollision" type="CollisionShape2D" parent="."]
 position = Vector2(0.5, -1)
 shape = SubResource("RectangleShape2D_prw6r")
 
@@ -698,4 +696,17 @@ shape = SubResource("RectangleShape2D_2n3n4")
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_j4l73")
 
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+navigation_layers = 2
+path_postprocessing = 1
+
+[node name="ReagroTimer" type="Timer" parent="."]
+autostart = true
+
+[node name="RepathTimer" type="Timer" parent="."]
+wait_time = 0.1
+autostart = true
+
 [connection signal="area_entered" from="DamageZone" to="." method="_on_damage_zone_area_entered"]
+[connection signal="timeout" from="ReagroTimer" to="." method="_on_reagro_timer_timeout"]
+[connection signal="timeout" from="RepathTimer" to="." method="_on_repath_timer_timeout"]

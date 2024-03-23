@@ -388,7 +388,7 @@ properties/3/path = NodePath("AnimatedSprite2D:frame")
 properties/3/spawn = true
 properties/3/replication_mode = 1
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" groups=["player"]]
 y_sort_enabled = true
 texture_filter = 1
 scale = Vector2(3, 3)
