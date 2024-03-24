@@ -1,25 +1,36 @@
-extends CharacterBody2D
+class_name Player extends CharacterBody2D
 
 @export var speed = 100
 @export var projectile: PackedScene
 @export var spawn_location: Node
+@export var health = 100
 var last_direction = DirectionHelper.Direction.SOUTH
 var can_shoot = true
+var is_dead = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	$AnimatedSprite2D.play()
 	$AnimatedSprite2D.animation = "idle_south"
-	$Camera2D.enabled = is_multiplayer_authority()
+	if !is_multiplayer_authority():
+		$Camera2D.enabled = false
+		$PlayerHUD.visible = false
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if !is_multiplayer_authority():
 		return
+	
+	if health <= 0:
+		is_dead = true
+	
+	if is_dead:
+		$AnimatedSprite2D.animation = "dead"
+		return
 
 	var mouse_position = get_global_mouse_position()
 	var looking_angle_rad = position.angle_to_point(mouse_position)
-	var looking_direction = get_looking_direction(looking_angle_rad)
+	var looking_direction = DirectionHelper.get_looking_direction(looking_angle_rad)
 	
 	var velocity = Vector2.ZERO
 	if Input.is_action_pressed("ui_left"):
@@ -51,32 +62,6 @@ func _process(delta):
 func get_moving_direction(velocity) -> DirectionHelper.Direction:
 	var direction = DirectionHelper.get_moving_direction(velocity)
 	return last_direction if direction == DirectionHelper.Direction.NONE else direction
-		
-
-func get_looking_direction(looking_angle_rad) -> DirectionHelper.Direction:
-	var looking_angle = rad_to_deg(looking_angle_rad)
-	if looking_angle < 0:
-		looking_angle += 360
-	if _is_between(looking_angle, 0, 22.5) or _is_between(looking_angle, 360 - 22.5, 360):
-		return DirectionHelper.Direction.EAST
-	if _is_between(looking_angle, 45 - 22.5, 45 + 22.5):
-		return DirectionHelper.Direction.SOUTH_EAST
-	if _is_between(looking_angle, 90 - 22.5, 90 + 22.5):
-		return DirectionHelper.Direction.SOUTH
-	if _is_between(looking_angle, 135 - 22.5, 135 + 22.5):
-		return DirectionHelper.Direction.SOUTH_WEST
-	if _is_between(looking_angle, 180 - 22.5, 180 + 22.5):
-		return DirectionHelper.Direction.WEST
-	if _is_between(looking_angle, 225 - 22.5, 225 + 22.5):
-		return DirectionHelper.Direction.NORTH_WEST
-	if _is_between(looking_angle, 270 - 22.5, 270 + 22.5):
-		return DirectionHelper.Direction.NORTH
-	if _is_between(looking_angle, 315 - 22.5, 315 + 22.5):
-		return DirectionHelper.Direction.NORTH_EAST
-	return last_direction
-
-func _is_between(a, min, max):
-	return a > min && a < max
 
 @rpc("authority", "call_local", "reliable")
 func _shoot_rpc(looking_angle_rad):
@@ -86,3 +71,11 @@ func _shoot_rpc(looking_angle_rad):
 
 func _on_fire_rate_timer_timeout():
 	can_shoot = true
+
+func damage(damage):
+	health = max(0, health - damage)
+
+func _on_damage_zone_area_entered(area):
+	if "attack_damage" in area:
+		print(MultiplayerHelper.local_player_info.name + " getting hit")
+		damage(area.attack_damage)

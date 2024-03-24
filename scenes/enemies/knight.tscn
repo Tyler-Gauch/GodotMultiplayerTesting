@@ -1,10 +1,11 @@
-[gd_scene load_steps=83 format=3 uid="uid://dy3ki53v1qc6i"]
+[gd_scene load_steps=92 format=3 uid="uid://dy3ki53v1qc6i"]
 
 [ext_resource type="Texture2D" uid="uid://7ecyux8abhje" path="res://images/Characters/Knight1_Attack.png" id="1_nivnm"]
 [ext_resource type="Script" path="res://scripts/enemies/knight.gd" id="1_uwr52"]
 [ext_resource type="Texture2D" uid="uid://bgyvew0t21q4" path="res://images/Characters/Knight1_Faint.png" id="2_w614f"]
 [ext_resource type="Texture2D" uid="uid://bj384cx4rnudk" path="res://images/Characters/Knight1_Idle.png" id="3_6n6lq"]
 [ext_resource type="Texture2D" uid="uid://dn3o08qxvucfk" path="res://images/Characters/Knight1_Move.png" id="4_mye5k"]
+[ext_resource type="Script" path="res://scripts/weapon/sword.gd" id="6_0p72f"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_f6j5r"]
 atlas = ExtResource("1_nivnm")
@@ -313,7 +314,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_n21s4")
 }],
-"loop": true,
+"loop": false,
 "name": &"attack_east",
 "speed": 5.0
 }, {
@@ -330,7 +331,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_2tjl7")
 }],
-"loop": true,
+"loop": false,
 "name": &"attack_north",
 "speed": 5.0
 }, {
@@ -347,7 +348,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_4wsih")
 }],
-"loop": true,
+"loop": false,
 "name": &"attack_north_east",
 "speed": 5.0
 }, {
@@ -364,7 +365,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_eq1w0")
 }],
-"loop": true,
+"loop": false,
 "name": &"attack_north_west",
 "speed": 5.0
 }, {
@@ -381,7 +382,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_5ie6j")
 }],
-"loop": true,
+"loop": false,
 "name": &"attack_south",
 "speed": 5.0
 }, {
@@ -398,7 +399,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_jaj2w")
 }],
-"loop": true,
+"loop": false,
 "name": &"attack_south_east",
 "speed": 5.0
 }, {
@@ -415,7 +416,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_0jd1v")
 }],
-"loop": true,
+"loop": false,
 "name": &"attack_south_west",
 "speed": 5.0
 }, {
@@ -432,7 +433,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_k83c3")
 }],
-"loop": true,
+"loop": false,
 "name": &"attack_west",
 "speed": 5.0
 }, {
@@ -668,6 +669,30 @@ properties/4/path = NodePath("AnimatedSprite2D:frame")
 properties/4/spawn = true
 properties/4/replication_mode = 1
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rmhvd"]
+size = Vector2(20.3333, 12.3333)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_k1x40"]
+size = Vector2(24.6667, 15.1667)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yurtx"]
+size = Vector2(24.3333, 15.3333)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7qe5q"]
+size = Vector2(24.3333, 16.6667)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nrkxu"]
+size = Vector2(24.8333, 17)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ir56o"]
+size = Vector2(20.3333, 15.3333)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bchdw"]
+size = Vector2(24.6667, 15.3333)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_b7j1n"]
+size = Vector2(24.1667, 15.3333)
+
 [node name="Knight" type="CharacterBody2D" groups=["enemies"]]
 y_sort_enabled = true
 scale = Vector2(3, 3)
@@ -678,7 +703,6 @@ y_sort_enabled = true
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_a1wg8")
 animation = &"idle_south"
-frame_progress = 0.50257
 offset = Vector2(0, -8.42)
 
 [node name="MovementCollision" type="CollisionShape2D" parent="."]
@@ -697,6 +721,7 @@ shape = SubResource("RectangleShape2D_2n3n4")
 replication_config = SubResource("SceneReplicationConfig_j4l73")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+target_desired_distance = 20.0
 navigation_layers = 2
 path_postprocessing = 1
 
@@ -707,6 +732,54 @@ autostart = true
 wait_time = 0.1
 autostart = true
 
+[node name="AttackZone" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("6_0p72f")
+
+[node name="south" type="CollisionShape2D" parent="AttackZone"]
+position = Vector2(0.499999, 0.833333)
+shape = SubResource("RectangleShape2D_rmhvd")
+disabled = true
+
+[node name="south_east" type="CollisionShape2D" parent="AttackZone"]
+position = Vector2(12.6667, -0.666667)
+shape = SubResource("RectangleShape2D_k1x40")
+disabled = true
+
+[node name="south_west" type="CollisionShape2D" parent="AttackZone"]
+position = Vector2(-11.8333, -0.666667)
+shape = SubResource("RectangleShape2D_yurtx")
+disabled = true
+
+[node name="west" type="CollisionShape2D" parent="AttackZone"]
+position = Vector2(-11.8333, -8.66667)
+shape = SubResource("RectangleShape2D_7qe5q")
+disabled = true
+
+[node name="east" type="CollisionShape2D" parent="AttackZone"]
+position = Vector2(12.75, -8.66667)
+shape = SubResource("RectangleShape2D_nrkxu")
+disabled = true
+
+[node name="north" type="CollisionShape2D" parent="AttackZone"]
+position = Vector2(0.5, -16)
+shape = SubResource("RectangleShape2D_ir56o")
+disabled = true
+
+[node name="north_east" type="CollisionShape2D" parent="AttackZone"]
+position = Vector2(12.6667, -16)
+shape = SubResource("RectangleShape2D_bchdw")
+disabled = true
+
+[node name="north_west" type="CollisionShape2D" parent="AttackZone"]
+position = Vector2(-11.75, -16)
+shape = SubResource("RectangleShape2D_b7j1n")
+disabled = true
+
+[connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
+[connection signal="frame_changed" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_frame_changed"]
 [connection signal="area_entered" from="DamageZone" to="." method="_on_damage_zone_area_entered"]
 [connection signal="timeout" from="ReagroTimer" to="." method="_on_reagro_timer_timeout"]
 [connection signal="timeout" from="RepathTimer" to="." method="_on_repath_timer_timeout"]
+[connection signal="area_entered" from="AttackZone" to="." method="_on_attack_zone_area_entered"]

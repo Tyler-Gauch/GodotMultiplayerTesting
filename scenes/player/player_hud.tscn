@@ -1,0 +1,46 @@
+[gd_scene load_steps=2 format=3 uid="uid://nf1p6ehugy5r"]
+
+[ext_resource type="Script" path="res://scripts/player/player_hud.gd" id="1_y8xo8"]
+
+[node name="PlayerHUD" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_y8xo8")
+
+[node name="HealthBar" type="ProgressBar" parent="."]
+modulate = Color(0.254902, 0.823529, 0.305882, 1)
+layout_mode = 0
+offset_left = 24.0
+offset_top = 13.0
+offset_right = 395.0
+offset_bottom = 40.0
+value = 50.0
+
+[node name="WaveNumber" type="Label" parent="."]
+layout_mode = 0
+offset_left = 1041.0
+offset_top = 558.0
+offset_right = 1152.0
+offset_bottom = 646.0
+theme_override_colors/font_color = Color(0, 0, 0, 0.313726)
+theme_override_font_sizes/font_size = 64
+text = "1
+"
+horizontal_alignment = 1
+
+[node name="YouAreDead" type="Label" parent="."]
+z_index = 2
+y_sort_enabled = true
+layout_mode = 0
+offset_left = 378.0
+offset_top = 259.0
+offset_right = 786.0
+offset_bottom = 347.0
+theme_override_font_sizes/font_size = 64
+text = "You are dead"
+horizontal_alignment = 1
+vertical_alignment = 1

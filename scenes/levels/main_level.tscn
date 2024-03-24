@@ -16,6 +16,28 @@ y_sort_enabled = true
 script = ExtResource("1_vex54")
 enemy = ExtResource("2_axmwd")
 
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="WaitingMessage" type="Label" parent="UI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 26.0
+offset_top = 9.0
+offset_right = 497.0
+offset_bottom = 63.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 32
+text = "Waiting for other players..."
+
 [node name="Map" parent="." instance=ExtResource("2_rrjj3")]
 
 [node name="PlayerSpawner" type="MultiplayerSpawner" parent="." node_paths=PackedStringArray("spawn_location")]
@@ -26,11 +48,10 @@ spawn_location = NodePath("../MultiplayerSpawner")
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://scenes/projectiles/fireball.tscn", "res://scenes/projectiles/bullet.tscn", "res://scenes/enemies/knight.tscn")
-spawn_path = NodePath("..")
+spawn_path = NodePath(".")
 
 [node name="GracePeriod" type="Timer" parent="."]
 one_shot = true
-autostart = true
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_u3ex1")

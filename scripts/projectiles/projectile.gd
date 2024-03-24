@@ -1,7 +1,7 @@
 extends Area2D
 
 @export var speed = 750
-@export var damage = 15
+@export var attack_damage = 15
 var is_dead = false
 
 # Called when the node enters the scene tree for the first time.

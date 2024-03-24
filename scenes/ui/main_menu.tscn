@@ -14,29 +14,53 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
+[node name="LobbyLabel" type="Label" parent="Menu"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 547.0
+offset_top = 19.0
+offset_right = 567.0
+offset_bottom = 42.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 32
+text = "Lobbies"
+
 [node name="Host" type="Button" parent="Menu"]
 layout_mode = 0
-offset_right = 100.0
-offset_bottom = 42.0
+offset_left = 438.0
+offset_top = 495.0
+offset_right = 538.0
+offset_bottom = 537.0
 text = "Host"
 
 [node name="LobbyContainer" type="ScrollContainer" parent="Menu"]
 layout_mode = 0
-offset_left = 103.0
-offset_top = 2.0
-offset_right = 382.0
-offset_bottom = 184.0
+offset_left = 138.0
+offset_top = 99.0
+offset_right = 1022.0
+offset_bottom = 448.0
 
 [node name="Lobbies" type="VBoxContainer" parent="Menu/LobbyContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
 
 [node name="Refresh" type="Button" parent="Menu"]
 layout_mode = 0
-offset_left = -1.0
-offset_top = 44.0
-offset_right = 99.0
-offset_bottom = 86.0
+offset_left = 631.0
+offset_top = 495.0
+offset_right = 731.0
+offset_bottom = 537.0
 text = "Refresh"
+
+[node name="Username" type="TextEdit" parent="Menu"]
+layout_mode = 0
+offset_left = 193.0
+offset_top = 495.0
+offset_right = 411.0
+offset_bottom = 535.0
+placeholder_text = "Enter username"
 
 [connection signal="pressed" from="Menu/Host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="Menu/Refresh" to="." method="_on_refresh_pressed"]

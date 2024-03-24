@@ -1,28 +1,35 @@
-extends Node2D
+class_name MainLevel extends Node2D
 
 @export var enemy: PackedScene
-
 @export var wave = 0
 var wave_enemies = []
 var in_grace_period = false
+var game_is_ready = false
 
 @onready var map: TileMap = $Map
 @onready var spawner: MultiplayerSpawner = $MultiplayerSpawner
+@onready var grace_period: Timer = $GracePeriod
+
+func _ready():
+	if is_multiplayer_authority():
+		MultiplayerHelper.game_ready.connect(_on_game_ready)
+	
+	# must be last line in ready function
+	MultiplayerHelper.loaded.rpc(MultiplayerHelper.local_player_info.to_dict())
 
 func _process(delta):
 	if !is_multiplayer_authority():
 		return
 
-	if wave_enemies.size() == 0 and !in_grace_period:
-		print("Wave complete")
-		$GracePeriod.start()
+	if game_is_ready and wave_enemies.size() == 0 and !in_grace_period:
+		grace_period.start()
 		in_grace_period = true
 
 func _on_grace_period_timeout():
 	if is_multiplayer_authority():
 		wave += 1
 		wave_enemies = []
-		var wanted_num_enemies = wave * 10
+		var wanted_num_enemies = 0 + (1.15 * wave)
 		# This must be layer 0. If the spawnable ground is not layer 0
 		# navigation doesn't work. Not quite sure why at the moment but it
 		# is what it is for now.
@@ -41,3 +48,7 @@ func _on_enemy_death(enemy):
 	if !is_multiplayer_authority():
 		return
 	wave_enemies.erase(enemy)
+
+func _on_game_ready():
+	$UI.hide()
+	game_is_ready = true
