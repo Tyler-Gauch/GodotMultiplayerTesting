@@ -20,7 +20,7 @@ func join_lobby(lobby):
 	else:
 		if !MultiplayerHelper.local_player_info:
 			MultiplayerHelper.create_local_user_from_name(username.text)
-		get_tree().change_scene_to_file("res://scenes/ui/lobby.tscn")
+		$Menu.hide()
 
 func _on_host_pressed():
 	if !_check_username():
@@ -29,7 +29,8 @@ func _on_host_pressed():
 	MultiplayerHelper.host_lobby()
 	if !MultiplayerHelper.local_player_info:
 		MultiplayerHelper.create_local_user_from_name(username.text)
-	get_tree().change_scene_to_file("res://scenes/ui/lobby.tscn")
+	SceneHelper.replace_scene($LevelSpawner, load("res://scenes/ui/lobby.tscn"))
+	$Menu.hide()
 
 func _on_lobby_list_refreshed(lobbies):
 	for lobby in lobbies:

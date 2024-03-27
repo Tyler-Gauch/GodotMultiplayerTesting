@@ -4,17 +4,22 @@ class_name Player extends CharacterBody2D
 @export var projectile: PackedScene
 @export var spawn_location: Node
 @export var health = 100
+@export var is_dead = false
 var last_direction = DirectionHelper.Direction.SOUTH
 var can_shoot = true
-var is_dead = false
+var player_info: PlayerInfo
+var paused = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	$AnimatedSprite2D.play()
 	$AnimatedSprite2D.animation = "idle_south"
 	if !is_multiplayer_authority():
+		print("not MP auth so disabling player: " + str(name))
 		$Camera2D.enabled = false
 		$PlayerHUD.visible = false
+	else:
+		print("MP auth for " + str(name))
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -26,6 +31,9 @@ func _process(delta):
 	
 	if is_dead:
 		$AnimatedSprite2D.animation = "dead"
+		return
+
+	if paused:
 		return
 
 	var mouse_position = get_global_mouse_position()
@@ -72,10 +80,15 @@ func _shoot_rpc(looking_angle_rad):
 func _on_fire_rate_timer_timeout():
 	can_shoot = true
 
+@rpc("any_peer", "call_local", "reliable")
 func damage(damage):
+	if !is_multiplayer_authority():
+		return
+
 	health = max(0, health - damage)
 
 func _on_damage_zone_area_entered(area):
-	if "attack_damage" in area:
-		print(MultiplayerHelper.local_player_info.name + " getting hit")
-		damage(area.attack_damage)
+	return
+	#if "attack_damage" in area:
+		#print(MultiplayerHelper.local_player_info.name + " getting hit")
+		#damage(area.attack_damage)

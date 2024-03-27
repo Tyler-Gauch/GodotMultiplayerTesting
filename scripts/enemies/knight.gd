@@ -19,6 +19,8 @@ var is_attacking = false
 
 func _ready():
 	sprite.play()
+	if is_multiplayer_authority():
+		MultiplayerHelper.player_disconnected.connect(_on_player_disconnected)
 
 func _process(delta):
 	if !is_multiplayer_authority() || is_dead:
@@ -71,14 +73,18 @@ func damage(damage):
 	health -= damage
 
 func _on_damage_zone_area_entered(area):
+	if !is_multiplayer_authority():
+		return
 	if "attack_damage" in area:
 		damage(area.attack_damage)
-		
+
 func _find_closest_player() -> Node:
 	var min_distance = -1
 	var closest_player = null
 	for player in players:
-		if !player || player.is_dead:
+		# skip any player related fields that aren't
+		# specifically the player objects
+		if !is_instance_valid(player) or !player is Player or player.is_dead:
 			continue
 
 		var distance_to_player = global_position.distance_to(player.global_position)
@@ -116,3 +122,6 @@ func _on_animated_sprite_2d_animation_finished():
 
 	if sprite.animation.begins_with("attack"):
 		is_attacking = false
+		
+func _on_player_disconnected(player_info_dict):
+	players = get_tree().get_nodes_in_group("player")

@@ -29,7 +29,7 @@ func _player_pressed(player_name):
 	pass
 
 func _on_ready_and_start_pressed():
-	MultiplayerHelper.load_game.rpc("res://scenes/levels/main_level.tscn")
+	SceneHelper.replace_scene(get_node("/root/Control/LevelSpawner"), load("res://scenes/levels/main_level.tscn"))
 	
 func _server_disconnected():
 	get_tree().change_scene_to_file("res://scenes/ui/main_menu.tscn")

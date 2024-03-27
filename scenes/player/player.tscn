@@ -404,6 +404,9 @@ properties/3/replication_mode = 1
 properties/4/path = NodePath(".:health")
 properties/4/spawn = true
 properties/4/replication_mode = 1
+properties/5/path = NodePath(".:is_dead")
+properties/5/spawn = true
+properties/5/replication_mode = 1
 
 [node name="Player" type="CharacterBody2D" groups=["player"]]
 y_sort_enabled = true
@@ -430,7 +433,7 @@ shape = SubResource("RectangleShape2D_dafwx")
 wait_time = 0.5
 one_shot = true
 
-[node name="DamageZone" type="Area2D" parent="."]
+[node name="DamageZone" type="Area2D" parent="." groups=["player"]]
 collision_layer = 4
 collision_mask = 4
 
@@ -445,11 +448,6 @@ replication_config = SubResource("SceneReplicationConfig_oj2j1")
 wait_time = 0.15
 
 [node name="PlayerHUD" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_0hchn")]
-offset_left = -197.333
-offset_top = -106.667
-offset_right = -197.333
-offset_bottom = -106.667
-scale = Vector2(0.336741, 0.327201)
 player = NodePath("..")
 
 [connection signal="area_entered" from="DamageZone" to="." method="_on_damage_zone_area_entered"]

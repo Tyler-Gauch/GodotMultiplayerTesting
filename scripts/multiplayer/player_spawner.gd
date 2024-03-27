@@ -13,10 +13,11 @@ func _ready():
 		multiplayer.peer_disconnected.connect(remove_player)
 
 func spawn_player(player_info_dict):
+	print("Spawning player " + str(player_info_dict))
 	var player_info = PlayerInfo.from_dict(player_info_dict)
-	print("Spawning player " + str(player_info.to_dict()))
 	var p = player_scene.instantiate()
 	p.spawn_location = spawn_location
+	p.player_info = player_info
 	p.set_multiplayer_authority(player_info.id)
 	players[player_info.id] = p
 	return p
